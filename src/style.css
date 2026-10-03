@@ -1,0 +1,84 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    color:white;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+}
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden; 
+}
+canvas {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+#settingsButton {
+    position: absolute;
+    top: 1%;
+    right: 0.5%;
+    height:5%;
+    aspect-ratio: 1 / 1;
+    z-index: 10;
+
+    border-radius: 50%;
+    background-color: rgba(25, 25, 25, 0.75); 
+    color: white;
+    border: none;
+    font-size: 25px;
+
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+#settingsButton:hover {
+    background-color: rgba(40, 40, 40, 0.75); 
+}
+#settingsButton:active {
+    transform: scale(0.95);
+}
+#settings{
+    position: absolute;
+    top: 1%;
+    right: 3.5%;
+    height:fit-content;
+    width: 12%;
+    z-index: 10;
+    padding: 1%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    
+    background-color: rgba(20, 20, 20, 0.75); 
+    border-radius: 2%;
+}
+#settings > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2%;
+}
+
+input[type="text"]{
+    height:100%;
+    width: 30%;
+    background-color: rgba(40, 40, 40, 0.75);
+    border: none;
+    border-radius: 5%;
+    padding:2%;
+    margin:2%;
+    text-align: center;
+    cursor: text;
+    font-size: 16px;
+}
+input[type="text"]:focus {
+    outline: none;
+}

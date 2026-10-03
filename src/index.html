@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Lab 5</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+
+  <body onload="main()">
+    <canvas id="webgl" width="1920" height="1080" autofocus>
+    Please use a browser that supports "canvas"
+    </canvas>
+    <button id="settingsButton"><span style = "transform: translateY(-2px);">⚙</span></button>
+    <div id="settings" style="display: none;">
+      <div>
+        <h4 id="num_drops_label">Rain Drops: </h4>
+        <input type="text" id="num_drops_textbox">
+      </div>
+      <input type="range" id="num_drops_slider" min="0" max="1000">
+      
+      <div>
+        <h4 id="rain_speed_label">Rain Speed: </h4>
+        <input type="text" id="rain_speed_textbox">
+      </div>
+      <input type="range" id="rain_speed_slider" step="0.01" min="0" max="0.1">
+      
+      <div>
+        <h4 id="ripple_detail_label">Ripple Detail: </h4>
+        <input type="text" id="ripple_detail_textbox">
+      </div>
+      <input type="range" id="ripple_detail_slider" min="3" max="20">
+    </div>
+
+    <script src="../lib/webgl-utils.js"></script>
+    <script src="../lib/webgl-debug.js"></script>
+    <script src="../lib/cuon-utils.js"></script>
+    <script src="../lib/cuon-matrix.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
