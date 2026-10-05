@@ -50,6 +50,13 @@ const fade = 0.004; // rate at which ripples fade away
 const floor_color = {r: 0.0, g:0.0, b:0.0, a:0.95}
 const background_color = {r: 0.0, g:0.0, b:0.0, a:1.0}
 
+// Lightning options
+const lightning_duration=35; // in ticks
+var current_lightning_duration = 0; // in ticks
+const num_steps = 10;
+var lightning_color=({r:Math.random(),g:Math.random(),b:Math.random(), a: 1.0});
+var lightning_chance=0.1;
+
 function main() {
   const settingsButton = document.getElementById('settingsButton');
   const settings = document.getElementById('settings');
@@ -79,6 +86,11 @@ function main() {
   const ripple_detail_textbox = document.getElementById('ripple_detail_textbox');
   ripple_detail_textbox.value=numSegments;
   ripple_detail_slider.value=numSegments;
+
+  const lightning_chance_slider = document.getElementById('lightning_chance_slider');
+  const lightning_chance_textbox = document.getElementById('lightning_chance_textbox');
+  lightning_chance_textbox.value=lightning_chance;
+  lightning_chance_slider.value=lightning_chance;
 
   if (!num_drops_slider.dataset.listenerAttached) {
     num_drops_slider.addEventListener('input', function() {
@@ -113,6 +125,7 @@ function main() {
     });
     rain_speed_textbox.dataset.listenerAttached = 'true';
   }
+  
 
   if (!ripple_detail_slider.dataset.listenerAttached) {
     ripple_detail_slider.addEventListener('input', function() {
@@ -131,6 +144,22 @@ function main() {
     ripple_detail_textbox.dataset.listenerAttached = 'true';
   }
 
+  if (!lightning_chance_textbox.dataset.listenerAttached) {
+    lightning_chance_textbox.addEventListener('input', function() {
+      lightning_chance=parseFloat(this.value)
+      lightning_chance_slider.value=parseFloat(this.value)
+      restartScene();
+    });
+    lightning_chance_textbox.dataset.listenerAttached = 'true';
+  }
+  if (!lightning_chance_slider.dataset.listenerAttached) {
+    lightning_chance_slider.addEventListener('input', function() {
+      lightning_chance=parseFloat(this.value)
+      lightning_chance_textbox.value=parseFloat(this.value)
+      restartScene();
+    });
+    lightning_chance_slider.dataset.listenerAttached = 'true';
+  }
   startScene();
 }
 function restartScene(){
@@ -210,6 +239,10 @@ function initVertexBuffers(gl) {
       colors.push(colors[i]);
     }
   }
+  // Init lightning
+  for (var i = 0; i < num_steps*4; i++) {
+      vertices.push(10);
+  }
 
   // Migrate data to new raw lists
   var vertices_list = vertices;
@@ -225,6 +258,12 @@ function initVertexBuffers(gl) {
       colors_list.push(colors[i].r, colors[i].g, colors[i].b, colors[i].a);
       colors_list.push(colors[i].r, colors[i].g, colors[i].b, colors[i].a);
     }
+  }
+
+  var lightning_color=({r:Math.random(),g:Math.random(),b:Math.random(), a: 1.0});
+  for (var i = 0; i < num_steps; i++) {
+    colors_list.push(lightning_color.r, lightning_color.g,lightning_color.b,lightning_color.a);
+    colors_list.push(lightning_color.r, lightning_color.g,lightning_color.b,lightning_color.a);
   }
 
   // The total number of vertices
@@ -317,15 +356,52 @@ function update(gl){
       }
     }
 
+    // Update lightning
+    var lightningStartPoint = num_drops* 4 + num_drops * numSegments* 4;
+    if(current_lightning_duration<lightning_duration){
+      current_lightning_duration++;
+    }
+    else if(Math.random()*100<lightning_chance){
+      var lightningX = Math.random() * 1.7 -0.85;
+      var origin = lightningX;
+      var height = 1 - (Math.random()*-0.40-0.52);
+      var audio= new Audio('../public/thunder.mp3');
+      audio.play();
+      for(var i = 0; i < num_steps*4; i+=4) {
+          var y1 = 1 - (height / num_steps) * i/4;
+          var y2 = 1 - (height / num_steps) * (i/4 + 1);
+          var x1 = lightningX;
+          var x2 = origin+(Math.random()-0.5) * 0.15;
+
+          var index = lightningStartPoint + i;
+
+          vertices[index]     = x1;
+          vertices[index + 1] = y1;
+          vertices[index + 2] = x2;
+          vertices[index + 3] = y2;
+
+          lightningX = x2;
+      }
+      lightning_color=({r:Math.random(),g:Math.random(),b:Math.random(), a: 1.0});
+      current_lightning_duration = 0;
+    }
+    else{
+        for(var i = 0; i < num_steps*4; i+=1) {
+          vertices[lightningStartPoint+i]=10; // offscreen
+        }
+    }
+
+
     // Migrate data to new raw lists
     var vertices_list = vertices;
     var colors_list = [];
-
-    // Update colors
+    
     for (var i = 0; i < num_drops; i++) {
       colors_list.push(colors[i].r, colors[i].g, colors[i].b, colors[i].a);
       colors_list.push(colors[i].r, colors[i].g, colors[i].b, colors[i].a);
     }
+
+    // Update colors
     for (var i = 0; i < num_drops; i++) {
       for (var j = 0; j < numSegments; j++) {
         if(last_colors[i]!=null){
@@ -337,6 +413,11 @@ function update(gl){
           colors_list.push(colors[i].r, colors[i].g, colors[i].b, colors[i].a);
         }
       }
+    }
+
+    for (var i = 0; i < num_steps; i++) {
+      colors_list.push(lightning_color.r, lightning_color.g,lightning_color.b,lightning_color.a);
+      colors_list.push(lightning_color.r, lightning_color.g,lightning_color.b,lightning_color.a);
     }
 
     // Update vertex buffer

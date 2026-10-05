@@ -48,7 +48,7 @@ canvas {
     top: 1%;
     right: 3.5%;
     height:fit-content;
-    width: 12%;
+    width: 13%;
     z-index: 10;
     padding: 1%;
 
@@ -69,6 +69,7 @@ canvas {
 
 input[type="text"]{
     height:100%;
+    display: inline-block;
     width: 30%;
     background-color: rgba(40, 40, 40, 0.75);
     border: none;
@@ -81,4 +82,11 @@ input[type="text"]{
 }
 input[type="text"]:focus {
     outline: none;
+}
+input[type="range"]:hover {
+    cursor: pointer;
+}
+h4 { 
+    white-space: nowrap;
+    cursor: default;
 }
