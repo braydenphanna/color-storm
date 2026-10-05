@@ -29,6 +29,7 @@ var animationId;
 // Lists that hold all the data for every point
 var vertices = [];
 var colors = [];
+var floors = [];
 var last_colors = [];
 
 // Buffers
@@ -54,11 +55,11 @@ function main() {
   const settings = document.getElementById('settings');
   settingsButton.addEventListener('click', function() {
       if(settings.style.display ==  "none"){
-        settingsButton.textContent="×"
+        settingsButton.innerHTML="<span style = 'transform: translateY(-2%);'>×</span>"
         settings.style.display="flex";
       }
       else {
-        settingsButton.innerHTML="<span style = 'transform: translateY(-2px);'>⚙</span>";
+        settingsButton.innerHTML="<span style = 'transform: translateY(-2.8%);'>⚙</span>";
         settings.style.display="none";
       }
   });
@@ -70,8 +71,8 @@ function main() {
 
   const rain_speed_slider = document.getElementById('rain_speed_slider');
   const rain_speed_textbox = document.getElementById('rain_speed_textbox');
-  rain_speed_textbox.value=rain_speed;
-  rain_speed_slider.value=rain_speed;
+  rain_speed_textbox.value=parseInt(((rain_speed - 0.03) / 0.01) + 1);
+  rain_speed_slider.value=parseInt(((rain_speed - 0.03) / 0.01) + 1);
 
   
   const ripple_detail_slider = document.getElementById('ripple_detail_slider');
@@ -98,16 +99,16 @@ function main() {
 
   if (!rain_speed_slider.dataset.listenerAttached) {
     rain_speed_slider.addEventListener('input', function() {
-      rain_speed = parseFloat(this.value);
-      rain_speed_textbox.value=rain_speed;
+      rain_speed = 0.03+ (parseFloat(this.value)-1)*0.01;
+      rain_speed_textbox.value=parseInt(this.value)
       restartScene();
     });
     rain_speed_slider.dataset.listenerAttached = 'true';
   }
- if (!rain_speed_textbox.dataset.listenerAttached) {
+  if (!rain_speed_textbox.dataset.listenerAttached) {
     rain_speed_textbox.addEventListener('input', function() {
-      rain_speed = parseFloat(this.value);
-      rain_speed_slider.value=rain_speed;
+      rain_speed = 0.03+ (parseFloat(this.value)-1)*0.01;
+      rain_speed_slider.value=parseInt(this.value)
       restartScene();
     });
     rain_speed_textbox.dataset.listenerAttached = 'true';
@@ -144,7 +145,6 @@ function restartScene(){
     // Restart everything
     startScene();
 }
-
 function startScene() {
   // Retrieve <canvas> element
   var canvas = document.getElementById('webgl');
@@ -178,7 +178,6 @@ function startScene() {
 
   tick();
 }
-
 function initVertexBuffers(gl) {
   if (vertexBuffer) {
     gl.deleteBuffer(vertexBuffer);
@@ -197,6 +196,7 @@ function initVertexBuffers(gl) {
     vertices.push(start_x, start_y, start_x, start_y-0.2);
     colors.push({r:Math.random(),g:Math.random(),b:Math.random(), a: 1.0});
     last_colors.push(colors[i]);
+    floors[i]= Math.random()*-0.40-0.52;
   }
 
   // Init ripples
@@ -255,7 +255,7 @@ function update(gl){
     // Loop through every rain drop
     for (var i = 0; i < num_drops*4; i+=4) {
       // Decide a random stop point for drop on the spot for variation
-      var floor=Math.random()*-0.50-0.50;
+      var floor = floors[i/4];
 
       // If rain drop hasn't hit the floor yet
       if(vertices[i+3]>floor) {
