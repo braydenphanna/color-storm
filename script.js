@@ -1,4 +1,4 @@
-// Lab5: Neon Rain
+// Lab5: Color Storm
 // @braydenphanna
 //
 // Based on:
