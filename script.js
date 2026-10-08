@@ -51,6 +51,7 @@ const floor_color = {r: 0.0, g:0.0, b:0.0, a:0.95}
 const background_color = {r: 0.0, g:0.0, b:0.0, a:1.0}
 
 function main() {
+  // Settings menu and button setup
   const settingsButton = document.getElementById('settingsButton');
   const settings = document.getElementById('settings');
   settingsButton.addEventListener('click', function() {
@@ -64,72 +65,65 @@ function main() {
       }
   });
 
+  // Get+set rain amount sider and textbox
   const num_drops_slider = document.getElementById('num_drops_slider');
   const num_drops_textbox = document.getElementById('num_drops_textbox');
   num_drops_textbox.value=num_drops;
   num_drops_slider.value=num_drops;
 
+  // Get+set rain speed sider and textbox
   const rain_speed_slider = document.getElementById('rain_speed_slider');
   const rain_speed_textbox = document.getElementById('rain_speed_textbox');
   rain_speed_textbox.value=parseInt(((rain_speed - 0.03) / 0.01) + 1);
   rain_speed_slider.value=parseInt(((rain_speed - 0.03) / 0.01) + 1);
 
-  
+  // Get+set ripple detail sider and textbox
   const ripple_detail_slider = document.getElementById('ripple_detail_slider');
   const ripple_detail_textbox = document.getElementById('ripple_detail_textbox');
   ripple_detail_textbox.value=numSegments;
   ripple_detail_slider.value=numSegments;
 
-  if (!num_drops_slider.dataset.listenerAttached) {
-    num_drops_slider.addEventListener('input', function() {
+  // Add event listener to rain amount slider and link to textbox
+  num_drops_slider.addEventListener('input', function() {
       num_drops = parseInt(this.value);
       num_drops_textbox.value=num_drops;
       restartScene();
-    });
-    num_drops_slider.dataset.listenerAttached = 'true';
-  }
-  if (!num_drops_textbox.dataset.listenerAttached) {
-    num_drops_textbox.addEventListener('input', function() {
+  });
+
+  // Add event listener to rain amount textbox and link to slider
+  num_drops_textbox.addEventListener('input', function() {
       num_drops = parseInt(this.value);
       num_drops_slider.value=num_drops;
       restartScene();
-    });
-    num_drops_textbox.dataset.listenerAttached = 'true';
-  }
+  });
 
-  if (!rain_speed_slider.dataset.listenerAttached) {
-    rain_speed_slider.addEventListener('input', function() {
+  // Add event listener to rain speed slider and link to textbox
+  rain_speed_slider.addEventListener('input', function() {
       rain_speed = 0.03+ (parseFloat(this.value)-1)*0.01;
       rain_speed_textbox.value=parseInt(this.value)
       restartScene();
-    });
-    rain_speed_slider.dataset.listenerAttached = 'true';
-  }
-  if (!rain_speed_textbox.dataset.listenerAttached) {
-    rain_speed_textbox.addEventListener('input', function() {
+  });
+
+  // Add event listener to rain speed textbox and link to slider
+  rain_speed_textbox.addEventListener('input', function() {
       rain_speed = 0.03+ (parseFloat(this.value)-1)*0.01;
       rain_speed_slider.value=parseInt(this.value)
       restartScene();
-    });
-    rain_speed_textbox.dataset.listenerAttached = 'true';
-  }
+  });
 
-  if (!ripple_detail_slider.dataset.listenerAttached) {
-    ripple_detail_slider.addEventListener('input', function() {
+  // Add event listener to ripple detail slider and link to textbox
+  ripple_detail_slider.addEventListener('input', function() {
       numSegments = parseInt(this.value);
       ripple_detail_textbox.value=numSegments;
       restartScene();
-    });
-    ripple_detail_slider.dataset.listenerAttached = 'true';
-  }
- if (!ripple_detail_textbox.dataset.listenerAttached) {
-    ripple_detail_textbox.addEventListener('input', function() {
-      numSegments = parseInt(this.value);
-      ripple_detail_slider.value=numSegments;
-      restartScene();
-    });
-    ripple_detail_textbox.dataset.listenerAttached = 'true';
-  }
+  });
+
+  // Add event listener to ripple detail textbox and link to slider
+  ripple_detail_textbox.addEventListener('input', function() {
+        numSegments = parseInt(this.value);
+        ripple_detail_slider.value=numSegments;
+        restartScene();
+  });
 
   startScene();
 }
